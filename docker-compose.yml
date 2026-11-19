@@ -1,0 +1,15 @@
+# Hosted server with automatic HTTPS (Caddy). Point your domain's DNS at this machine first.
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env          # BASE_URL=https://your.domain, ENCRYPTION_KEY, provider keys
+    environment: { PORT: "3000", DATA_DIR: /data }
+    volumes: [ "appdata:/data" ]
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: [ "80:80", "443:443" ]
+    volumes: [ "./Caddyfile:/etc/caddy/Caddyfile:ro", "caddydata:/data" ]
+    depends_on: [ app ]
+volumes: { appdata: {}, caddydata: {} }

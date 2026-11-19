@@ -1,0 +1,89 @@
+{
+  "name": "revenue-rescue-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Revenue Rescue: quote recovery desk for contractors",
+  "main": "desktop/main.js",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/smoke.js",
+    "desktop": "electron .",
+    "dist": "electron-builder --publish never",
+    "dist:win": "electron-builder --win --publish never",
+    "dist:mac": "electron-builder --mac --publish never",
+    "dist:linux": "electron-builder --linux --publish never"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "electron": "^45.4.1",
+    "electron-builder": "^26.18.0"
+  },
+  "author": {
+    "name": "Revenue Rescue",
+    "email": "support@example.com"
+  },
+  "homepage": "https://example.com",
+  "build": {
+    "appId": "com.revenuerescue.desktop",
+    "productName": "Revenue Rescue",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "desktop/**",
+      "server.js",
+      "providers.js",
+      "public/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "artifactName": "Revenue-Rescue-Setup-${version}.${ext}"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "category": "public.app-category.business",
+      "artifactName": "Revenue-Rescue-${version}-${arch}.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Office",
+      "artifactName": "Revenue-Rescue-${version}.${ext}",
+      "maintainer": "Revenue Rescue <support@example.com>"
+    },
+    
+    "generateUpdatesFilesForAllChannels": false
+  }
+}

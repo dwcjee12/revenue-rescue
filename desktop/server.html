@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Where does your data live?</title>
+<style>:root{color-scheme:light dark}body{font:15px/1.5 system-ui,sans-serif;margin:0;padding:22px;background:Canvas;color:CanvasText}h1{font-size:1.2rem;margin:0 0 6px}label{display:block;font-weight:600;margin:14px 0 4px}input{width:100%;box-sizing:border-box;padding:8px 10px;font:inherit;border:1px solid #8886;border-radius:8px}button{font:inherit;font-weight:600;padding:8px 16px;border-radius:999px;border:1px solid #8886;cursor:pointer;margin-right:8px;margin-top:14px}.p{background:#0b8f75;color:#fff;border-color:#0b8f75}p{margin:4px 0;color:GrayText}#e{color:#c2372f;min-height:1.3em}</style></head>
+<body><h1>Where does your data live?</h1><p>Use this computer only, or connect to a Revenue Rescue server your team shares. Everyone on the same server sees the same quotes.</p>
+<label for="u">Server address (leave empty for this computer only)</label><input id="u" placeholder="https://rescue.yourcompany.com" autocomplete="off"><p id="e" role="alert"></p>
+<button class="p" id="s">Save and restart</button><button id="c">Cancel</button>
+<script>
+const $=s=>document.querySelector(s);
+window.rrDesktop.config().then(c=>{ if(c.mode==='remote') $('#u').value=c.url; });
+$('#c').onclick=()=>window.close();
+$('#s').onclick=async()=>{ $('#e').textContent=''; try{ await window.rrDesktop.setServer($('#u').value.trim()); }catch(e){ $('#e').textContent=String(e.message||e).replace(/^Error invoking remote method 'set-server': Error: /,''); } };
+</script></body></html>
