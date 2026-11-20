@@ -60,7 +60,8 @@ function createWindow() {
   win.once('ready-to-show', () => win.show());
   win.webContents.setWindowOpenHandler(({ url }) => { openExternalSafe(url); return { action: 'deny' }; });
   win.webContents.on('will-navigate', (e, url) => { if (!url.startsWith(base)) { e.preventDefault(); openExternalSafe(url); } });
-  win.loadURL(base + '/dashboard.html').catch(() => dialog.showErrorBox('Cannot reach the server', `Could not open ${base}. Check your connection, or use File → Server settings to switch back to this computer.`));
+  // Retry a few times: the first launch on Windows can be slow while antivirus scans the new executable.
+  (async () => { for (let i = 0; i < 5; i++) { try { await win.loadURL(base + '/dashboard.html'); return; } catch (e) { if (!win || win.isDestroyed()) return; await new Promise(r => setTimeout(r, 1500)); } } dialog.showErrorBox('Cannot reach the server', `Could not open ${base}. Check your connection, or use File → Server settings to switch back to this computer.`); })();
   win.on('closed', () => { win = null; });
 }
 

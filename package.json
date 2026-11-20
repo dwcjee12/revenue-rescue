@@ -1,6 +1,6 @@
 {
   "name": "revenue-rescue-platform",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Revenue Rescue: quote recovery desk for contractors",
   "main": "desktop/main.js",
@@ -83,7 +83,6 @@
       "artifactName": "Revenue-Rescue-${version}.${ext}",
       "maintainer": "Revenue Rescue <support@example.com>"
     },
-    
     "generateUpdatesFilesForAllChannels": false
   }
 }

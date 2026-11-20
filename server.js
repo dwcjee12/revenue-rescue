@@ -144,6 +144,7 @@ app.use((req, res, next) => {
 });
 if (DESKTOP) app.use((req, res, next) => { const h = String(req.headers.host || ''); if (!/^(127\.0\.0\.1|localhost):\d+$/.test(h)) return res.status(403).send('Forbidden'); next(); });
 app.use(express.json({ limit: '4mb' }));
+app.get('/healthz', (req, res) => res.json({ ok: true }));
 app.get('/api/info', (req, res) => res.json({ desktop: DESKTOP }));
 const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
