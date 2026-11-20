@@ -1,6 +1,7 @@
 name: Release desktop installers
-# Push a tag like v0.2.0 (git tag v0.2.0 && git push --tags). Builds Windows, macOS and Linux installers
-# and attaches them to a GitHub Release. The same files feed the app's auto-update.
+# Push a tag like v0.2.3 (git tag v0.2.3 && git push origin v0.2.3).
+# Three jobs build the Windows, macOS and Linux installers. One final job publishes them all
+# (plus the update feeds latest*.yml) as a GitHub Release, which the app's update check reads.
 on:
   push:
     tags: ['v*']
@@ -13,9 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: windows-latest, args: '--win nsis --x64' }
-          - { os: macos-latest,   args: '--mac dmg zip' }
-          - { os: ubuntu-latest,  args: '--linux AppImage deb' }
+          - os: windows-latest
+            args: --win nsis --x64
+          - os: macos-latest
+            args: --mac dmg zip
+          - os: ubuntu-latest
+            args: --linux AppImage deb
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -25,28 +29,46 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      - name: Build and publish
+      - name: Build installers
+        shell: bash
         run: >
-          npx electron-builder ${{ matrix.args }}
-          --publish ${{ startsWith(github.ref, 'refs/tags/') && 'always' || 'never' }}
+          npx electron-builder ${{ matrix.args }} --publish never
           -c.publish.provider=github
-          -c.publish.releaseType=release
           -c.publish.owner=${{ github.repository_owner }}
           -c.publish.repo=${{ github.event.repository.name }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Optional code signing; without these the installers still build but show "unknown publisher" warnings.
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
       - uses: actions/upload-artifact@v4
-        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         with:
           name: installer-${{ matrix.os }}
+          if-no-files-found: error
           path: |
             dist/*.exe
             dist/*.dmg
+            dist/*.zip
             dist/*.AppImage
             dist/*.deb
+            dist/*.blockmap
+            dist/latest*.yml
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          ls -la out
+          if gh release view "$TAG" --repo "$REPO" >/dev/null 2>&1; then
+            gh release upload "$TAG" out/* --clobber --repo "$REPO"
+            gh release edit "$TAG" --draft=false --latest --repo "$REPO"
+          else
+            gh release create "$TAG" out/* --title "${TAG#v}" --generate-notes --latest --repo "$REPO"
+          fi
