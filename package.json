@@ -83,6 +83,7 @@
       "artifactName": "Revenue-Rescue-${version}.${ext}",
       "maintainer": "Revenue Rescue <support@example.com>"
     },
-    "generateUpdatesFilesForAllChannels": false
+    "generateUpdatesFilesForAllChannels": false,
+    "publish": null
   }
 }
