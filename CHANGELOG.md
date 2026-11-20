@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4
+- Re-release of 0.2.3 with the correct version number.
+
+## 0.2.3
+- Release workflow: builds on three runners, then one job publishes the release with all installers and update feeds.
+
 ## 0.2.2
 - Help menu: provider setup guide, release notes, report a problem, About (version, mode, data folder).
 - Mac builds publish a ZIP and `latest-mac.yml` alongside the DMG so update checks work.

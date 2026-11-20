@@ -1,6 +1,6 @@
 {
   "name": "revenue-rescue-platform",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "private": true,
   "description": "Revenue Rescue: quote recovery desk for contractors",
   "main": "desktop/main.js",
