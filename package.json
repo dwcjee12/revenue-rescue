@@ -1,6 +1,6 @@
 {
   "name": "revenue-rescue-platform",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "description": "Revenue Rescue: quote recovery desk for contractors",
   "main": "desktop/main.js",
@@ -28,7 +28,7 @@
     "name": "Revenue Rescue",
     "email": "support@example.com"
   },
-  "homepage": "https://example.com",
+  "homepage": "https://github.com/dwcjee12/revenue-rescue",
   "build": {
     "appId": "com.revenuerescue.desktop",
     "productName": "Revenue Rescue",
@@ -85,5 +85,13 @@
     },
     "generateUpdatesFilesForAllChannels": false,
     "publish": null
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dwcjee12/revenue-rescue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dwcjee12/revenue-rescue/issues"
+  },
+  "license": "UNLICENSED"
 }

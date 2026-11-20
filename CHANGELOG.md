@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2
+- Help menu: provider setup guide, release notes, report a problem, About (version, mode, data folder).
+- Mac builds publish a ZIP and `latest-mac.yml` alongside the DMG so update checks work.
+- Release workflow YAML fixed; provider setup guide added (docs/PROVIDER_SETUP.md).
+- Project metadata: repository, issue tracker, license notice, security policy.
+
 ## 0.2.1
 - Desktop app retries the first page load (slow first start under antivirus scanning).
 

@@ -79,6 +79,12 @@ async function backup() {
   } catch (e) { dialog.showErrorBox('Backup failed', e.message); }
 }
 
+const REPO = 'https://github.com/dwcjee12/revenue-rescue';
+function about() {
+  dialog.showMessageBox(win, { type: 'info', title: 'About Revenue Rescue', message: `Revenue Rescue ${app.getVersion()}`,
+    detail: `Human-approved quote recovery for HVAC contractors.\nNothing is sent to a customer without your approval.\n\nMode: ${cfg.mode === 'remote' ? 'connected to ' + cfg.url : 'on this computer'}\nData: ${cfg.mode === 'remote' ? 'on the server' : path.join(app.getPath('userData'), 'data')}\nElectron ${process.versions.electron} · Node ${process.versions.node}` });
+}
+
 function menu() {
   const mac = process.platform === 'darwin';
   Menu.setApplicationMenu(Menu.buildFromTemplate([
@@ -87,7 +93,14 @@ function menu() {
     { role: 'editMenu' },
     { label: 'View', submenu: [{ role: 'reload' }, { role: 'resetZoom' }, { role: 'zoomIn' }, { role: 'zoomOut' }, { role: 'togglefullscreen' }, ...(app.isPackaged ? [] : [{ role: 'toggleDevTools' }])] },
     { role: 'windowMenu' },
-    { label: 'Help', submenu: [{ label: cfg.mode === 'remote' ? `Connected to ${cfg.url}` : `Redirect address for provider apps: ${base}/oauth/callback/<provider>`, enabled: false }] }
+    { label: 'Help', submenu: [
+      { label: 'Provider setup guide', click: () => shell.openExternal(REPO + '/blob/main/docs/PROVIDER_SETUP.md') },
+      { label: 'Release notes', click: () => shell.openExternal(REPO + '/releases') },
+      { label: 'Report a problem', click: () => shell.openExternal(REPO + '/issues/new') },
+      { type: 'separator' },
+      { label: 'About Revenue Rescue', click: about },
+      { label: cfg.mode === 'remote' ? `Connected to ${cfg.url}` : `Redirect address for provider apps: ${base}/oauth/callback/<provider>`, enabled: false }
+    ] }
   ]));
 }
 

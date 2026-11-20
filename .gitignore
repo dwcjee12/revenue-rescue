@@ -8,3 +8,11 @@ data/
 .DS_Store
 TRIAL-LOGIN.txt
 *.bat.log
+dist-mac/
+dist-mac-*/
+dist-linux-*/
+*.zip
+*.AppImage
+*.deb
+*.exe
+*.blockmap
